@@ -1,24 +1,21 @@
 package lru
 
-/* import( */
-	// "fmt"
-/* ) */
-
 type Node struct {
+  Freq  int
 	Key	  interface{}
 	Value interface{}
 	next, prev *Node
 }
 
-type Cache struct {
+type LRUCache struct {
 	head, tail *Node
 	size int
 	cacheItem []*Node
 	kv map[interface{}]*Node
 }
 
-func New(n int)*Cache{
-	c := new(Cache)
+func New(n int)*LRUCache{
+	c := new(LRUCache)
 	c.size = n
 	c.head = new(Node)
 	c.tail = new(Node)
@@ -33,7 +30,7 @@ func New(n int)*Cache{
 	c.kv = make(map[interface{}]*Node)
 	return c
 }
-func (cache* Cache)Set(key interface{}, value interface{})bool {
+func (cache* LRUCache)Set(key interface{}, value interface{})bool {
 	node, ok := cache.kv[key]
 	if !ok {
 		l := len(cache.cacheItem)
@@ -64,7 +61,7 @@ func (cache* Cache)Set(key interface{}, value interface{})bool {
     return true
 }
 
-func (cache* Cache)Get(key interface{})(value interface{}, err error){
+func (cache* LRUCache)Get(key interface{})(value interface{}, err error){
 	node, ok := cache.kv[key]
 	if !ok {
 		value = nil
@@ -78,7 +75,7 @@ func (cache* Cache)Get(key interface{})(value interface{}, err error){
 	return
 }
 
-func (cache* Cache)detach(node* Node){
+func (cache* LRUCache)detach(node* Node){
 	if node == nil {
 		return 
 	}
@@ -86,7 +83,7 @@ func (cache* Cache)detach(node* Node){
 	node.next.prev = node.prev
 }
 
-func (cache* Cache)attach(node* Node){
+func (cache* LRUCache)attach(node* Node){
 	if node == nil{
 		return 
 	}

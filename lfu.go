@@ -1,22 +1,15 @@
-package lfu
+package lru
 
 import (
   "fmt"
 )
-
-type Node struct {
-  Freq  int
-	Key	  interface{}
-	Value interface{}
-	next, prev *Node
-}
 
 type Elem struct {
   head, tail *Node
   items int
 }
 
-type Cache struct {
+type LFUCache struct {
 	head, tail *Node
 	size int
 	cacheItem []*Node
@@ -36,8 +29,8 @@ func NewElem()*Elem {
     return e
 }
 
-func New(n int)*Cache{
-	c := new(Cache)
+func NewLFUCache(n int)*LFUCache{
+	c := new(LFUCache)
 	c.size = n
 	c.cacheItem = make([]*Node, n)
 	for i := 0; i < n ; i++{
@@ -48,7 +41,7 @@ func New(n int)*Cache{
 	return c
 }
 
-func (cache* Cache)Get(key interface{})(value interface{}, err error){
+func (cache* LFUCache)Get(key interface{})(value interface{}, err error){
 	node, ok := cache.kv[key]
 	if !ok {
 		value = nil
@@ -62,7 +55,7 @@ func (cache* Cache)Get(key interface{})(value interface{}, err error){
 	return
 }
 
-func (cache* Cache) MinFreq() (node *Node) {
+func (cache* LFUCache) MinFreq() (node *Node) {
   for i := 1; i > 0; i++ {
     ele, ok := cache.freq[i]
     if !ok || ele.items == 0{
@@ -74,7 +67,7 @@ func (cache* Cache) MinFreq() (node *Node) {
   return
 }
 
-func (cache* Cache)Set(key interface{}, value interface{})bool {
+func (cache* LFUCache)Set(key interface{}, value interface{})bool {
 	node, ok := cache.kv[key]
 	if !ok {
 		l := len(cache.cacheItem)
@@ -101,7 +94,7 @@ func (cache* Cache)Set(key interface{}, value interface{})bool {
   return true
 }
 
-func (cache* Cache)Debug() {
+func (cache* LFUCache)Debug() {
   fmt.Println("-------------Debug----------------")
   fmt.Println(cache.freq)
   for k, v := range cache.freq {
@@ -114,7 +107,7 @@ func (cache* Cache)Debug() {
   fmt.Println("-------------End Debug----------------")
 }
 
-func (cache* Cache)detach(node* Node){
+func (cache* LFUCache)detach(node* Node){
 	if node == nil {
 		return 
 	}
@@ -126,7 +119,7 @@ func (cache* Cache)detach(node* Node){
 	node.next.prev = node.prev
 }
 
-func (cache* Cache)attach(node* Node) {
+func (cache* LFUCache)attach(node* Node) {
 	if node == nil{
 		return 
 	}

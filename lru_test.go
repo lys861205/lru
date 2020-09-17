@@ -10,7 +10,7 @@ func TestSet1(t *testing.T){
 	cache.Set("key", "Hello World")
 	cache.Set("key1", "Hello go")
 	cache.Set("key2", 100)
-	cache.Set("key3", "Hello China")
+	cache.Set("key3", "Hello XXX")
 	cache.Set("key4", 100)
 	cache.Set("key4", 200)
 	v,err := cache.Get("key4")

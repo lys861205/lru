@@ -1,12 +1,12 @@
-package lfu
+package lru
 
 import (
 	"testing"
 	"fmt"
 )
 
-func TestSet1(t *testing.T){
-	cache := New(2)
+func TestSet(t *testing.T){
+	cache := NewLFUCache(2)
 	cache.Set("key", "Hello World")
 	cache.Set("key1", "Hello go")
 	cache.Set("key2", 100)
@@ -38,7 +38,7 @@ func TestSet1(t *testing.T){
 		fmt.Println(v)
 	}
 }
-func BenchmarkSet(b *testing.B){
+func BenchmarkSet1(b *testing.B){
 	for i := 0; i < b.N; i++{
 		cache := New(10)
 		   cache.Set("key", "Hello World")
