@@ -14,7 +14,7 @@ type LFUCache struct {
 	size int
 	cacheItem []*Node
 	kv map[interface{}]*Node
-  freq map[int]*Elem
+	freq map[int]*Elem
 }
 
 func NewElem()*Elem {
@@ -37,7 +37,7 @@ func NewLFUCache(n int)*LFUCache{
 		c.cacheItem[i] = &Node{Freq:0}
 	}
 	c.kv = make(map[interface{}]*Node)
-  c.freq = make(map[int]*Elem)
+	c.freq = make(map[int]*Elem)
 	return c
 }
 
@@ -48,10 +48,10 @@ func (cache* LFUCache)Get(key interface{})(value interface{}, err error){
 		err = NotExist
 		return 
 	}
-  err = nil
+	err = nil
 	value = node.Value
-  cache.detach(node)
-  cache.attach(node)
+	cache.detach(node)
+	cache.attach(node)
 	return
 }
 
@@ -68,29 +68,29 @@ func (cache* LFUCache) MinFreq() (node *Node) {
 }
 
 func (cache* LFUCache)Set(key interface{}, value interface{})bool {
-	node, ok := cache.kv[key]
-	if !ok {
-		l := len(cache.cacheItem)
-		if l==0 {
-			node = cache.MinFreq()
-			cache.detach(node)
-			delete(cache.kv, node.Key)
+  node, ok := cache.kv[key]
+  if !ok {
+    l := len(cache.cacheItem)
+    if l==0 {
+      node = cache.MinFreq()
+      cache.detach(node)
+      delete(cache.kv, node.Key)
       node.Freq = 0
-		} else {
-			node = cache.cacheItem[l-1]
-			cache.cacheItem = cache.cacheItem[:l-1]
-		}
-		cache.kv[key] = node
-	} else {
-		cache.detach(node)
-	}
-	if node == nil {
-		// fmt.Println("node is empty")
-		return false
-	}
-	node.Key   = key
-	node.Value = value
-	cache.attach(node)
+    } else {
+      node = cache.cacheItem[l-1]
+      cache.cacheItem = cache.cacheItem[:l-1]
+    }
+    cache.kv[key] = node
+  } else {
+    cache.detach(node)
+  }
+  if node == nil {
+    // fmt.Println("node is empty")
+    return false
+  }
+  node.Key   = key
+  node.Value = value
+  cache.attach(node)
   return true
 }
 
@@ -108,21 +108,21 @@ func (cache* LFUCache)Debug() {
 }
 
 func (cache* LFUCache)detach(node* Node){
-	if node == nil {
-		return 
-	}
+  if node == nil {
+    return 
+  }
   ele, ok := cache.freq[node.Freq]
   if ok {
     ele.items--
   }
-	node.prev.next = node.next 
-	node.next.prev = node.prev
+  node.prev.next = node.next 
+  node.next.prev = node.prev
 }
 
 func (cache* LFUCache)attach(node* Node) {
-	if node == nil{
-		return 
-	}
+  if node == nil{
+    return 
+  }
   node.Freq++
   ele, ok := cache.freq[node.Freq]
   if !ok {
