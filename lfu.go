@@ -114,6 +114,9 @@ func (cache* LFUCache)detach(node* Node){
   ele, ok := cache.freq[node.Freq]
   if ok {
     ele.items--
+    if ele.items == 0 {
+	  	delete(cache.freq, node.Freq)
+    }
   }
   node.prev.next = node.next 
   node.next.prev = node.prev
